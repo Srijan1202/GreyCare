@@ -3,18 +3,18 @@ import bcrypt from "bcryptjs";
 import connect from "@/lib/db"; // Import your connection logic
 import User from "@/lib/models/user"; // Updated path to the User model
 
-
 export async function POST(request) {
   try {
     // Parse the request body
     const body = await request.json();
-    const { email, password } = body;
+    const { phone, password } = body; // Use phone instead of email
 
     // Connect to the database
     await connect();
 
-    // Check if the user exists
-    const user = await User.findOne({ email });
+    // Check if the user exists based on phone number
+    const user = await User.findOne({ phone });
+    console.log(user);
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
