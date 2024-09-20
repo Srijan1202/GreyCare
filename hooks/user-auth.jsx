@@ -1,54 +1,77 @@
-"use client"
+"use client";
 
-import React, { useState } from "react"
-import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Heart, Activity, Stethoscope, Apple } from "lucide-react"
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Heart, Activity, Stethoscope, Apple } from "lucide-react";
 
 const UserAuth = () => {
-  const [isLogin, setIsLogin] = useState(true)
-  const [errors, setErrors] = useState({})
+  const [isLogin, setIsLogin] = useState(true);
+  const [errors, setErrors] = useState({});
+  const [formMessage, setFormMessage] = useState(""); // For success/error messages
 
   const validateForm = (formData) => {
-    const newErrors = {}
+    const newErrors = {};
 
     // Phone number validation
-    const phoneNumber = formData.get('phone')
+    const phoneNumber = formData.get("phone");
     if (phoneNumber) {
       if (!/^(0\d{10}|\d{10})$/.test(phoneNumber)) {
-        newErrors.phone = "Phone number must be 10 digits, or 11 digits if starting with 0"
+        newErrors.phone = "Phone number must be 10 digits, or 11 digits if starting with 0";
       }
     }
 
     // Email validation
-    const email = formData.get('email')
+    const email = formData.get("email");
     if (email) {
-      const validEmailDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com']
-      const emailRegex = new RegExp(`^[a-zA-Z0-9._-]+@(${validEmailDomains.join('|')})$`)
+      const validEmailDomains = ["gmail.com", "yahoo.com", "hotmail.com", "outlook.com"];
+      const emailRegex = new RegExp(`^[a-zA-Z0-9._-]+@(${validEmailDomains.join("|")})$`);
       if (!emailRegex.test(email)) {
-        newErrors.email = "Please enter a valid email address from a renowned provider"
+        newErrors.email = "Please enter a valid email address from a renowned provider";
       }
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    const formData = new FormData(event.target)
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+
     if (validateForm(formData)) {
-      // Handle form submission logic here
-      console.log("Form submitted successfully")
+      const url = isLogin ? "/api/login" : "/api/signup";
+      const formValues = Object.fromEntries(formData.entries());
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formValues),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          setFormMessage(isLogin ? "Login successful!" : "Sign up successful!");
+        } else {
+          setFormMessage(result.error || "An error occurred. Please try again.");
+        }
+      } catch (error) {
+        console.error("API error: ", error);
+        setFormMessage("An unexpected error occurred. Please try again later.");
+      }
     } else {
-      console.log("Form has errors")
+      console.log("Form has errors");
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 relative overflow-hidden">
@@ -86,6 +109,8 @@ const UserAuth = () => {
                   Sign Up
                 </TabsTrigger>
               </TabsList>
+
+              {/* Login Form */}
               <TabsContent value="login">
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
@@ -102,6 +127,8 @@ const UserAuth = () => {
                   </Button>
                 </form>
               </TabsContent>
+
+              {/* Sign Up Form */}
               <TabsContent value="signup">
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
@@ -154,11 +181,18 @@ const UserAuth = () => {
                 </form>
               </TabsContent>
             </Tabs>
+
+            {/* Display success or error messages */}
+            {formMessage && (
+              <p className={`text-sm mt-4 ${formMessage.includes("successful") ? "text-green-500" : "text-red-500"}`}>
+                {formMessage}
+              </p>
+            )}
           </CardContent>
         </Card>
       </motion.div>
     </div>
-  )
-}
+  );
+};
 
-export default UserAuth
+export default UserAuth;
