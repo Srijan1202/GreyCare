@@ -1,20 +1,25 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import connect from "@/lib/db"; // Import your connection logic
-import User from "@/lib/models/user"; // Updated path to the User model
+import connect from "@/lib/db";
+import User from "@/lib/models/user";
 
 export async function POST(request) {
   try {
     // Parse the request body
     const body = await request.json();
-    const { phone, password } = body; // Use phone instead of email
+    const { phone, email, password } = body;
 
     // Connect to the database
     await connect();
 
-    // Check if the user exists based on phone number
-    const user = await User.findOne({ phone });
-    console.log(user);
+    // Check if the user exists based on phone number or email
+    let user;
+    if (phone) {
+      user = await User.findOne({ phone });
+    } else if (email) {
+      user = await User.findOne({ email });
+    }
+
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
@@ -25,8 +30,17 @@ export async function POST(request) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
-    // Respond with success
-    return NextResponse.json({ message: "Login successful" }, { status: 200 });
+    // Prepare user data to send back (excluding sensitive information)
+    const userData = {
+      id: user._id,
+      name: user.name,
+      phone: user.phone,
+      email: user.email,
+      // Add any other fields you want to send back
+    };
+
+    // Respond with success and user data
+    return NextResponse.json({ message: "Login successful", user: userData }, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

@@ -87,22 +87,40 @@ export default function ModernAuth() {
   const handleSubmit = async (event) => {
     event.preventDefault()
     const formData = new FormData(event.target)
-
+  
     if (validateForm(formData)) {
       const url = isLogin ? "/api/login" : "/api/signup"
       const formValues = Object.fromEntries(formData.entries())
-
+  
+      // Prepare the body based on whether it's a login or signup
+      console.log(formValues);
+      const body = isLogin
+        ? {
+            phone: formValues.phone,
+            password: formValues.password
+          }
+        : {
+            name: formValues.name,
+            phone: formValues.phone,
+            age: formValues.age,
+            gender: formValues.gender,
+            email: formValues.email,
+            guardianEmail: formValues.guardianEmail,
+            guardianPhone: formValues.guardianPhone,
+            password: formValues.password
+          }
+  
       try {
         const response = await fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formValues),
+          body: JSON.stringify(body),
         })
-
+  
         const result = await response.json()
-
+  
         if (response.ok) {
           setFormMessage(isLogin ? "Login successful!" : "Sign up successful!")
         } else {
@@ -114,6 +132,8 @@ export default function ModernAuth() {
       }
     }
   }
+  
+  
 
   const containerVariants = {
     hidden: { opacity: 0, scale: 0.98 },
