@@ -7,14 +7,14 @@ export async function POST(request) {
   try {
     // Parse the request body
     const body = await request.json();
-    const { phone, password } = body; // Use phone instead of email
+    const { email, password } = body; // Use email instead of phone
 
     // Connect to the database
     await connect();
 
-    // Check if the user exists based on phone number
-    const user = await User.findOne({ phone });
-    console.log(user);
+    // Check if the user exists based on email
+    const user = await User.findOne({ email });
+    console.log("User found:", user); // Debugging log
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
@@ -28,7 +28,7 @@ export async function POST(request) {
     // Respond with success
     return NextResponse.json({ message: "Login successful" }, { status: 200 });
   } catch (error) {
-    console.error(error);
+    console.error("Error during login:", error); // More specific error logging
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

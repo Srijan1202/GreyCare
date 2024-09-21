@@ -27,7 +27,7 @@ export function HealthInfoFormComponent() {
   }, [hasDiagnosis])
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8 mt-16">
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">Health Information Form</CardTitle>
