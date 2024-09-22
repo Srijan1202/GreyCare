@@ -22,7 +22,7 @@ export function NavbarComponent() {
           </div>
           <div className="hidden md:flex items-center space-x-4">
             <a href="/dashboard" className="text-gray-700 hover:text-gray-900">Home</a>
-            <a href="#" className="text-gray-700 hover:text-gray-900">Instant Clinic</a>
+            <a href="/InstantclinicPage" className="text-gray-700 hover:text-gray-900">Instant Clinic</a>
             <a href="#" className="text-gray-700 hover:text-gray-900">Contact Guardian</a>
             <a href="#" className="text-gray-700 hover:text-gray-900">Support</a>
           </div>
