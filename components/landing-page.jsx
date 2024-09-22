@@ -8,61 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import { Heart, HelpCircle, Home, Menu, User, X, Clock, Phone, MessageCircle, ChevronUp, ChevronDown } from "lucide-react";
 
-import Link from 'next/link';
-
-const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-
-  const sendEmergencyMessage = () => {
-    alert("Emergency message sent to guardian!");
-  };
-
-  return (
-    <nav className="fixed top-0 left-0 right-0 bg-white shadow-lg z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <div className="text-2xl font-bold">GreyCare</div>
-          </div>
-          <div className="hidden md:flex items-center space-x-4">
-            <a href="#" className="text-gray-700 
-            hover:text-gray-900">Home</a>
-            <a href="#" className="text-gray-700 hover:text-gray-900">Instant Clinic</a>
-            <a href="#" className="text-gray-700 hover:text-gray-900">Contact Guardian</a>
-            <a href="#" className="text-gray-700 hover:text-gray-900">Support</a>
-          </div>
-          <div className="flex items-center">
-            <Button variant="destructive" size="sm" className="mr-4" onClick={sendEmergencyMessage}>
-              <Phone className="h-4 w-4 mr-2" />
-              Emergency
-            </Button>
-            <Button variant="ghost" size="icon" className="md:hidden" onClick={toggleMenu}>
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </Button>
-            <Link href="/login">
-            <Button variant="ghost" size="icon">
-              <User className="h-6 w-6" />
-            </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-      {isMenuOpen && (
-        <div className="md:hidden bg-white shadow-lg">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Home</a>
-            <a href="/dashboard" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Instant Clinic</a>
-            <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Contact Guardian</a>
-            <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Support</a>
-          </div>
-        </div>
-      )}
-    </nav>
-  );
-};
-
 const HeroSection = () => {
   const controls = useAnimation();
   const [ref, inView] = useInView();
@@ -363,7 +308,7 @@ const Chatbot = () => {
 export function LandingPageJsx() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 pt-16">
-      <Navbar />
+      {/* <Navbar /> */}
       <main className="flex-grow">
         <HeroSection />
         <CalendarSection />
