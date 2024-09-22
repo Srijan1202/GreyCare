@@ -72,6 +72,6 @@ export function NavbarComponent() {
           </div>
         </div>
       )}
-    </nav>
-  )
+    </nav>
+  )
 }
